@@ -1,4 +1,5 @@
 import 'package:explore_macedonia_flutter/widgets/displaytoken.dart';
+import 'package:explore_macedonia_flutter/widgets/listlocationsscreen.dart';
 import 'package:explore_macedonia_flutter/widgets/loginscreen.dart';
 import 'package:explore_macedonia_flutter/widgets/registerscreen.dart';
 import 'package:flutter/material.dart';
@@ -76,10 +77,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => TokenDisplayScreen()),
+                    MaterialPageRoute(builder: (context) => ListLocationScreen()),
                   );
                 },
-                child: Text('Show Token'),
+                child: Text('All locations'),
               )
             else
               Column(

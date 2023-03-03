@@ -9,14 +9,14 @@ import javax.persistence.*;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "location", schema = "visited_locations")
+@Table(name = "visited_locations", schema = "locations")
 public class VisitedLocation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "users_table_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
