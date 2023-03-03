@@ -30,15 +30,16 @@ public class LocationServiceImpl implements LocationService {
     public Optional<Location> addLocation(LocationHelper locationHelper) {
         List<User> allUsers = this.userService.findAll();
         Location location = this.locationRepository.findByLocation(locationHelper.getLocation());
-        allUsers.forEach(user -> {
-            this.unvisitedLocationRepository.save(new UnvisitedLocation(user, location));
-        });
-        return Optional.of(this.locationRepository.save(new Location(
+        this.locationRepository.save(new Location(
                 locationHelper.getLocation(),
                 locationHelper.getLongitude(),
                 locationHelper.getLatitude(),
                 locationHelper.getDescription()
-        )));
+        ));
+        allUsers.forEach(user -> {
+            this.unvisitedLocationRepository.save(new UnvisitedLocation(user, location));
+        });
+        return Optional.of(location);
     }
 
     @Override
@@ -67,5 +68,10 @@ public class LocationServiceImpl implements LocationService {
         Location location = this.findById(id);
         location.setIsRecommended(true);
         return Optional.of(this.locationRepository.save(location));
+    }
+
+    @Override
+    public List<Location> getAll() {
+        return this.locationRepository.findAll();
     }
 }
