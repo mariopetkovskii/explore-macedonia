@@ -21,6 +21,23 @@ public class LocationController {
                 .map(user -> ResponseEntity.ok().body("Location was successfully added."))
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
+    @PutMapping("/edit/{id}")
+    public ResponseEntity<String> editLocation(@PathVariable Long id, @RequestBody LocationHelper locationHelper){
+        return this.locationService.editLocation(id, locationHelper)
+                .map(user -> ResponseEntity.ok().body("Edit."))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+    @GetMapping("/recommend/{id}")
+    public ResponseEntity<String> recommendLocation(@PathVariable Long id, @RequestBody LocationHelper locationHelper){
+        return this.locationService.recommendLocation(id, locationHelper)
+                .map(user -> ResponseEntity.ok().body("Recommend."))
+                .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteLocation(@RequestBody LocationHelper locationHelper){
+        this.locationService.deleteLocation(locationHelper);
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/getAll")
     public List<Location> getLocations(){
