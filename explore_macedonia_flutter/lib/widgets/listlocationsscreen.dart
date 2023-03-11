@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:explore_macedonia_flutter/widgets/displaytoken.dart';
 import 'package:explore_macedonia_flutter/widgets/locationroutescreen.dart';
 import 'package:flutter/material.dart';
@@ -62,9 +61,9 @@ class _ListLocationScreenState extends State<ListLocationScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => LocationDetailsScreen(
-                                latitude: location.latitude,
-                                longitude: location.longitude,
+                              builder: (context) => RouteWidget(
+                                destinationLatitude: location.latitude,
+                                destinationLongitude: location.longitude,
                               ),
                             ),
                           );

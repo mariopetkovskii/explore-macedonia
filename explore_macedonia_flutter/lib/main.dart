@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:explore_macedonia_flutter/widgets/displaytoken.dart';
 import 'package:explore_macedonia_flutter/widgets/listlocationsscreen.dart';
 import 'package:explore_macedonia_flutter/widgets/loginscreen.dart';
@@ -46,12 +47,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void _logout() async {	
-    final prefs = await SharedPreferences.getInstance();	
-    await prefs.remove('token');	
-    setState(() {	
-      _isLoggedIn = false;	
-    });	
+  void _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    setState(() {
+      _isLoggedIn = false;
+    });
   }
 
   @override
@@ -59,19 +60,35 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        actions: _isLoggedIn	
-            ? [	
-                IconButton(	
-                  onPressed: _logout,	
-                  icon: Icon(Icons.logout),	
-                )	
-              ]	
-            : [],
+        actions: _isLoggedIn
+            ? [
+                IconButton(
+                  onPressed: _logout,
+                  icon: Icon(Icons.logout),
+                )
+              ]
+            : [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                    );
+                  },
+                  icon: Icon(Icons.login),
+                ),
+              ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Image.asset(
+              'assets/mapmacedonia.jpg',
+              height: 200,
+              fit: BoxFit.cover,
+            ),
+            SizedBox(height: 20.0),
             if (_isLoggedIn)
               ElevatedButton(
                 onPressed: () {
@@ -80,7 +97,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(builder: (context) => ListLocationScreen()),
                   );
                 },
-                child: Text('All locations'),
+                child: Text(
+                  'All locations',
+                  style: TextStyle(fontSize: 20),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blueAccent,
+                  minimumSize: Size(200, 50),
+                ),
               )
             else
               Column(
@@ -92,8 +116,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         MaterialPageRoute(builder: (context) => LoginScreen()),
                       );
                     },
-                    child: Text('Login'),
+                    child: Text(
+                      'Login',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.green,
+                      minimumSize: Size(200, 50),
+                    ),
                   ),
+                  SizedBox(height: 20.0),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.push(
@@ -101,7 +133,14 @@ class _MyHomePageState extends State<MyHomePage> {
                         MaterialPageRoute(builder: (context) => RegisterScreen()),
                       );
                     },
-                    child: Text('Register'),
+                    child: Text(
+                      'Register',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.orange,
+                      minimumSize: Size(200, 50),
+                    ),
                   ),
                 ],
               ),

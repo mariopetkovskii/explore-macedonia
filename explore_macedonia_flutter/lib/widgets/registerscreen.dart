@@ -61,112 +61,121 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Register'),
-      ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.all(16),
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text('Register'),
+      backgroundColor: Colors.green,
+    ),
+    body: Column(
+      children: [
+        Container(
+          height: 200,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/mapmacedonia.jpg'),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextFormField(
-                  controller: _firstNameController,
-                  decoration: InputDecoration(
-                    labelText: 'First Name',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
+                controller: _firstNameController,
+                decoration: InputDecoration(
+                  labelText: 'First Name',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'First name is required';
                   }
                   return null;
                 },
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                controller: _lastNameController,
+                decoration: InputDecoration(
+                  labelText: 'Last Name',
+                  border: OutlineInputBorder(),
                 ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _lastNameController,
-                  decoration: InputDecoration(
-                    labelText: 'Last Name',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
+                validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Last name is required';
                   }
                   return null;
                 },
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                controller: _emailController,
+                decoration: InputDecoration(
+                  labelText: 'Email',
+                  border: OutlineInputBorder(),
                 ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Email is required';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Password',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Password is required';
                   }
                   return null;
                 },
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                controller: _confirmPasswordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Confirm Password',
+                  border: OutlineInputBorder(),
                 ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
+                validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Password is required';
                   }
                   return null;
                 },
-                ),
-                SizedBox(height: 16),
-                TextFormField(
-                  controller: _confirmPasswordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: 'Confirm Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Password is required';
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _register();
                   }
-                  return null;
                 },
-                ),
-                SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState != null) {
-                      _register();
-                    }
-                  },
-                  child: Text('Register'),
-                ),
-                if (_errorText.isNotEmpty)
-                  Padding(
-                    padding: EdgeInsets.only(top: 16),
-                    child: Text(
-                      _errorText,
-                      style: TextStyle(color: Colors.red),
-                    ),
+                child: Text('Register'),
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.green,
+                    onPrimary: Colors.white,
                   ),
+              ),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
+      ],
+    ),
+  );
+}
+
 }
