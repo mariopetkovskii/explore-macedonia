@@ -1,18 +1,17 @@
 import 'dart:convert';
+import 'package:explore_macedonia_flutter/widgets/displaytoken.dart';
 import 'package:explore_macedonia_flutter/widgets/locationroutescreen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
-import '../map.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
-class ListLocationScreen extends StatefulWidget {
+class ListUnvisitedScreen extends StatefulWidget {
   @override
-  _ListLocationScreenState createState() => _ListLocationScreenState();
+  _ListUnvisitedScreenState createState() => _ListUnvisitedScreenState();
 }
 
-class _ListLocationScreenState extends State<ListLocationScreen> {
+class _ListUnvisitedScreenState extends State<ListUnvisitedScreen> {
   List<Location> _locations = [];
 
   @override
@@ -22,8 +21,10 @@ class _ListLocationScreenState extends State<ListLocationScreen> {
   }
 
   Future<void> _fetchLocations() async {
-    final url = Uri.parse('http://10.0.2.2:8080/rest/location/getAll');
-    final response = await http.get(url);
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final url = Uri.parse('http://10.0.2.2:8080/rest/location/unvisitLocation');
+    final response = await http.get(url, headers: {'Authorization': 'Bearer $token'},);
 
     if (response.statusCode == 200) {
       final jsonBody = jsonDecode(response.body);
@@ -63,11 +64,9 @@ class _ListLocationScreenState extends State<ListLocationScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => MapScreen(
-                                destination: LatLng(
-                                  location.latitude,
-                                  location.longitude,
-                                ),
+                              builder: (context) => RouteWidget(
+                                destinationLatitude: location.latitude,
+                                destinationLongitude: location.longitude,
                               ),
                             ),
                           );

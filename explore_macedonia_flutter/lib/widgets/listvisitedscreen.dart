@@ -1,19 +1,16 @@
 import 'dart:convert';
-import 'package:explore_macedonia_flutter/widgets/locationroutescreen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
-import '../map.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
-class ListLocationScreen extends StatefulWidget {
+class ListVisitedLocationScreen extends StatefulWidget {
   @override
-  _ListLocationScreenState createState() => _ListLocationScreenState();
+  _ListVisitedLocationScreenState createState() => _ListVisitedLocationScreenState();
 }
 
-class _ListLocationScreenState extends State<ListLocationScreen> {
-  List<Location> _locations = [];
+class _ListVisitedLocationScreenState extends State<ListVisitedLocationScreen> {
+  List<VisitedLocation> _locations = [];
 
   @override
   void initState() {
@@ -22,14 +19,16 @@ class _ListLocationScreenState extends State<ListLocationScreen> {
   }
 
   Future<void> _fetchLocations() async {
-    final url = Uri.parse('http://10.0.2.2:8080/rest/location/getAll');
-    final response = await http.get(url);
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final url = Uri.parse('http://10.0.2.2:8080/rest/location/visitLocation');
+    final response = await http.get(url, headers: {'Authorization': 'Bearer $token'},);
 
     if (response.statusCode == 200) {
       final jsonBody = jsonDecode(response.body);
-      final locations = (jsonBody as List).map((e) => Location.fromJson(e)).toList();
+      final visitedlocations = (jsonBody as List).map((e) => VisitedLocation.fromJson(e)).toList();
       setState(() {
-        _locations = locations;
+        _locations = visitedlocations;
       });
     } else {
       throw Exception('Failed to fetch locations');
@@ -58,22 +57,6 @@ class _ListLocationScreenState extends State<ListLocationScreen> {
                         Text('Recommended: Yes')
                       else
                         Text('Recommended: No'),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MapScreen(
-                                destination: LatLng(
-                                  location.latitude,
-                                  location.longitude,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                        child: Text('Visit'),
-                      ),
                     ],
                   ),
                 );
@@ -83,7 +66,7 @@ class _ListLocationScreenState extends State<ListLocationScreen> {
   }
 }
 
-class Location {
+class VisitedLocation {
   final int id;
   final String location;
   final double longitude;
@@ -91,7 +74,7 @@ class Location {
   final String description;
   final bool isRecommended;
 
-  Location({
+  VisitedLocation({
     required this.id,
     required this.location,
     required this.longitude,
@@ -100,8 +83,8 @@ class Location {
     required this.isRecommended,
   });
 
-  factory Location.fromJson(Map<String, dynamic> json) {
-    return Location(
+  factory VisitedLocation.fromJson(Map<String, dynamic> json) {
+    return VisitedLocation(
       id: json['id'],
       location: json['location'],
       longitude: json['longitude'],

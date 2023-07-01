@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'package:explore_macedonia_flutter/widgets/ListUnvisitedScreen.dart';
 import 'package:explore_macedonia_flutter/widgets/displaytoken.dart';
 import 'package:explore_macedonia_flutter/widgets/listlocationsscreen.dart';
+import 'package:explore_macedonia_flutter/widgets/listvisitedscreen.dart';
+import 'package:flutter/widgets.dart';
 import 'package:explore_macedonia_flutter/widgets/loginscreen.dart';
 import 'package:explore_macedonia_flutter/widgets/registerscreen.dart';
 import 'package:flutter/material.dart';
@@ -90,21 +93,59 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             SizedBox(height: 20.0),
             if (_isLoggedIn)
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ListLocationScreen()),
-                  );
-                },
-                child: Text(
-                  'All locations',
-                  style: TextStyle(fontSize: 20),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blueAccent,
-                  minimumSize: Size(200, 50),
-                ),
+              Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ListLocationScreen()),
+                      );
+                    },
+                    child: Text(
+                      'All locations',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.blueAccent,
+                      minimumSize: Size(200, 50),
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ListUnvisitedScreen()),
+                      );
+                    },
+                    child: Text(
+                      'Unvisited locations',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.purpleAccent,
+                      minimumSize: Size(200, 50),
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ListVisitedLocationScreen()),
+                      );
+                    },
+                    child: Text(
+                      'Visited locations',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.greenAccent,
+                      minimumSize: Size(200, 50),
+                    ),
+                  ),
+                ],
               )
             else
               Column(
