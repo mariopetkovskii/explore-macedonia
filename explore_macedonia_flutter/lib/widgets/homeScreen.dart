@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'listvisitedscreen.dart';
 import 'listunvisitedscreen.dart';
 import 'listlocationsscreen.dart';
+import 'compassScreen.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -40,6 +41,15 @@ class HomeScreen extends StatelessWidget {
                 );
               },
               child: Text('Visited'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CompassHome()),
+                );
+              },
+              child: Text('Compass'),
             ),
           ],
         ),
