@@ -15,6 +15,11 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              'assets/mapmacedonia.jpg',
+              width: 200,
+              height: 200,
+            ),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -22,6 +27,9 @@ class HomeScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => ListUnvisitedScreen()),
                 );
               },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue,
+              ),
               child: Text('Unvisited'),
             ),
             ElevatedButton(
@@ -31,6 +39,9 @@ class HomeScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => ListLocationScreen()),
                 );
               },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.pink,
+              ),
               child: Text('Locations'),
             ),
             ElevatedButton(
@@ -40,6 +51,9 @@ class HomeScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => ListVisitedLocationScreen()),
                 );
               },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.lightGreen,
+              ),
               child: Text('Visited'),
             ),
             ElevatedButton(
