@@ -3,6 +3,7 @@ package com.example.exploremacedoniabackend.xcontrollers;
 import com.example.exploremacedoniabackend.models.places.entity.Location;
 import com.example.exploremacedoniabackend.models.places.entity.UnvisitedLocation;
 import com.example.exploremacedoniabackend.models.places.helpers.LocationHelper;
+import com.example.exploremacedoniabackend.models.places.helpers.VisitedOrUnvisitedLocationHelper;
 import com.example.exploremacedoniabackend.models.userroles.helpers.UserRegisterDto;
 import com.example.exploremacedoniabackend.service.places.interfaces.LocationService;
 import com.example.exploremacedoniabackend.service.places.interfaces.UnvisitedLocationService;
@@ -60,5 +61,10 @@ public class LocationController {
     public List<Location> getAllVisitedLocationsForUser(HttpServletRequest request) {
         return visitedLocationService.getAll(request);
 
+    }
+    @PostMapping("/addtovisited")
+    public void addtovisited(@RequestBody VisitedOrUnvisitedLocationHelper e)
+    {
+        visitedLocationService.visitLocation(e);
     }
 }

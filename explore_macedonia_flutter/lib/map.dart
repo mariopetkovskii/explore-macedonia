@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:math' show cos, sqrt, asin;
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class MapScreen extends StatefulWidget {
   final LatLng destination;
@@ -114,9 +116,7 @@ class _MapScreenState extends State<MapScreen> {
                   polylineId: const PolylineId('overview_polyline'),
                   color: Colors.red,
                   width: 5,
-                  points: _info.polylinePoints
-                      .map((e) => LatLng(e.latitude, e.longitude))
-                      .toList(),
+                  points: _info.polylinePoints,
                 ),
             },
             onLongPress: _addMarker,
@@ -225,34 +225,46 @@ class _MapScreenState extends State<MapScreen> {
 }
 
 class DirectionsRepository {
-  static Future<Directions?> getDirections(LatLng origin, LatLng destination) {
-    // Implement your logic to fetch directions and return a Directions object
-    // You can use the origin and destination coordinates to make API requests or perform calculations
-    return Future.delayed(const Duration(seconds: 1), () {
-      // Placeholder implementation
-      final polylinePoints = [
-        LatLng(42.131178, 21.725486),
-        LatLng(42.100, 21.700),
-        destination,
-      ];
+  static const String apiKey = 'AIzaSyDrHM0FgOjpeVYjFiBdXL-u9EZAciaCcsg'; // Replace with your own API key
 
-      final totalDistance = _calculateTotalDistance(polylinePoints);
-      final totalDuration = '1h 30m';
+  static Future<Directions?> getDirections(LatLng origin, LatLng destination) async {
+    final url =
+        'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$apiKey';
 
-      return Directions(
-        LatLngBounds(northeast: LatLng(0, 0), southwest: LatLng(0, 0)),
-        polylinePoints,
-        totalDistance,
-        totalDuration,
-      );
-    });
-  }
+    final response = await http.get(Uri.parse(url));
 
-  static String _calculateTotalDistance(List<LatLng> polylinePoints) {
-    // Implement your logic to calculate the total distance of the polyline
-    // You can use the polylinePoints list to iterate and calculate the distance between each pair of points
-    // Return the total distance as a string
-    return '10.5 km';
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+      final routes = json['routes'];
+
+     if (routes != null && routes.isNotEmpty) {
+        final route = routes[0];
+        final bounds = route['bounds'];
+        final legs = route['legs'];
+
+        if (bounds != null && legs != null && legs.isNotEmpty) {
+          final northeast = bounds['northeast'];
+          final southwest = bounds['southwest'];
+
+          final boundsLatLng = LatLngBounds(
+            northeast: LatLng(northeast['lat'], northeast['lng']),
+            southwest: LatLng(southwest['lat'], southwest['lng']),
+          );
+
+          final polylinePoints = PolylinePoints()
+              .decodePolyline(route['overview_polyline']['points'])
+              .map((point) => LatLng(point.latitude, point.longitude))
+              .toList();
+
+          final totalDistance = legs[0]['distance']['text'];
+          final totalDuration = legs[0]['duration']['text'];
+
+          return Directions(boundsLatLng, polylinePoints, totalDistance, totalDuration);
+        }
+      }
+    }
+
+    return null;
   }
 }
 

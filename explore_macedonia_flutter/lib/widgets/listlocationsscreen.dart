@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../map.dart';
 
 
@@ -19,6 +20,41 @@ class _ListLocationScreenState extends State<ListLocationScreen> {
   void initState() {
     super.initState();
     _fetchLocations();
+  }
+
+  void navigateToMap(BuildContext context, double latitude, double longitude, int locationid) {
+  addToVisited(locationid);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MapScreen(
+          destination: LatLng(latitude, longitude),
+        ),
+      ),
+    );
+  }
+
+  void addToVisited(int locationid) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    
+    final url = Uri.parse('http://10.0.2.2:8080/rest/location/addtovisited');
+    final body = jsonEncode({
+      'locationId': locationid
+    });
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: body,
+    );
+
+    if (response.statusCode == 200) {
+    } else {
+    }
   }
 
   Future<void> _fetchLocations() async {
@@ -59,19 +95,7 @@ class _ListLocationScreenState extends State<ListLocationScreen> {
                       else
                         Text('Recommended: No'),
                       ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MapScreen(
-                                destination: LatLng(
-                                  location.latitude,
-                                  location.longitude,
-                                ),
-                              ),
-                            ),
-                          );
-                        },
+                        onPressed: () => navigateToMap(context, location.latitude, location.longitude, location.id),
                         child: Text('Visit'),
                       ),
                     ],

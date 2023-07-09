@@ -16,6 +16,8 @@ import com.example.exploremacedoniabackend.repository.userroles.UserRepository;
 import com.example.exploremacedoniabackend.service.places.interfaces.VisitedLocationService;
 import com.example.exploremacedoniabackend.service.userroles.interfaces.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,7 +37,8 @@ public class VisitedLocationImpl implements VisitedLocationService {
 
     @Override
     public void visitLocation(VisitedOrUnvisitedLocationHelper visitedOrUnvisitedLocationHelper) {
-        User user = this.userRepository.findById(visitedOrUnvisitedLocationHelper.getUserId()).orElseThrow(UserNotExistsException::new);
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        User user = this.userRepository.findByEmail(authentication.getName());
         Location location = this.locationRepository.findById(visitedOrUnvisitedLocationHelper.getLocationId()).orElseThrow(LocationNotFoundException::new);
         this.visitedLocationRepository.save(new VisitedLocation(user, location));
         UnvisitedLocation unvisitedLocation = this.unvisitedLocationRepository.findByUserAndLocation(user, location);
